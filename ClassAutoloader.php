@@ -21,6 +21,17 @@
 		/**
 		 * 
 		 */
+		public function callClosure($closureName, $className) {
+			if (!isset($this->closures[$closureName])) {
+				throw new \Exception("Unknown closure closureName: ". $closureName, 1);
+			}
+			$func = $this->closures[$closureName];
+			return $func($className);
+		}		
+		
+		/**
+		 * 
+		 */
 		protected function setPathClosure($name, $code) {
 			$this->closures[$name] = $code;
 		}
@@ -29,7 +40,7 @@
 		 * 
 		 */
 		protected function loader($className) {
-			foreach ($this->closures as $value) {				
+			foreach ($this->closures as $value) {
 				$filename = $value($className);
 				if (is_readable($filename)) {
 					include_once($filename);
@@ -42,7 +53,16 @@
 				&&
 				interface_exists($className, false) === false
 			) {
-				// throw new Exceptions\ClassNotFoundException('Class ' . $className . ' could not be found.');
+				$filename = array();
+				foreach ($this->closures as $name => $value) {
+					$filename[$name] = $value($className);
+				}
+				
+				throw new Exceptions\ClassNotFoundException(
+					'Class ' . '<pre>' . $className . '</pre>' . ' could not be found.'
+					. PHP_EOL
+					. '<pre>' . print_r($filename, true) .'</pre>'
+				);
 			}	
 		}
 	}

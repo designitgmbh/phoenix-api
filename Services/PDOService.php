@@ -86,7 +86,7 @@
 		 * @throws \Exception
 		 */
 		public function query(Statement $statement)
-		{	
+		{
 			$pdoStatement = $this->connection->query($this->evaluator->evaluate($statement));
 			if($pdoStatement)
 			{
@@ -110,6 +110,13 @@
 			throw new \Exception('Database error: "' . $error[2]. '" during ' . $this->evaluator->evaluate($statement));
 		}
 		
+		/**
+		 * Retrieves the ID generated for an AUTO_INCREMENT column by the previous query (usually INSERT).
+		 * The ID generated for an AUTO_INCREMENT column by the previous query on success, 0 if the previous query
+		 * does not generate an AUTO_INCREMENT value, or FALSE if no MySQL connection was established.
+		 * 
+		 * @return int    
+		 */
 		public function lastInsertId()
 		{
 			return $this->connection->lastInsertId();	

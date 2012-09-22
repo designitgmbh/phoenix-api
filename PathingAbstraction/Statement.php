@@ -157,7 +157,29 @@
 			 * 
 			 * @var integer
 			 */			
-			$TYPE_DELETE = 3;
+			$TYPE_DELETE = 3,
+
+			/**
+			 * Constant for SHOW TABLES Statments.
+			 * 
+			 * @var integer
+			 */
+			$TYPE_SHOW_TABLES = 4,
+			
+			/**
+			 * Constant for SHOW TABLE Statments.
+			 * 
+			 * @var integer
+			 */
+			$TYPE_SHOW_TABLE_COLUMNS = 5,
+			
+			/**
+			 * Constant for SHOW INDEX Statments.
+			 * 
+			 * @var integer
+			 */
+			$TYPE_SHOW_TABLE_INDEXES = 6
+		;
 		
 		/**
 		 * Creates a new Statement object.
@@ -371,6 +393,60 @@
 				return $this;
 			}
 			throw new \Exception('Statement.insertInto(): You can only call this method once on a statement.');
+		}
+		
+		/**
+		 * 
+		 * 
+		 * @param	string	$pattern	If present, indicates which table names to match 
+		 * @return	Statement
+		 * @throws	\Exception
+		 */
+		public function showTables($pattern = false)
+		{
+			$this->setType(self::$TYPE_SHOW_TABLES);
+			if(is_null($this->tables))
+			{
+				$this->tables = $pattern;
+				return $this;
+			}
+			throw new \Exception('Statement.showTables(): You can only call this method once on a statement.');
+		}
+		
+		/**
+		 * 
+		 * @param	string	$where	The table used for the update statement. 
+		 * 
+		 * @return	Statement
+		 * @throws	\Exception
+		 */
+		public function showTableColumns($table)
+		{
+			$this->setType(self::$TYPE_SHOW_TABLE_COLUMNS);
+			if(is_null($this->tables))
+			{
+				$this->tables = $table;
+				return $this;
+			}
+			throw new \Exception('Statement.showTableColumns(): You can only call this method once on a statement.');
+		}
+		
+		/**
+		 * 
+		 * @param	string	$where	The table used for the update statement. 
+		 * 
+		 * @return	Statement
+		 * @throws	\Exception
+		 */
+		public function showTableIndexes($table)
+		{
+			$this->setType(self::$TYPE_SHOW_TABLE_INDEXES);
+			if(is_null($this->tables))
+			{
+				$this->tables = $table;
+				return $this;
+			}
+			throw new \Exception('Statement.showTableIndexes(): You can only call this method once on a statement.');
 		}
 		
 		/**

@@ -269,11 +269,61 @@
 		}
 		
 		/**
+		 * Evaluates a show tables statement.
+		 * 
+		 * @param	Statement	$statement	The Statement the evaluation should be based on.
+		 * @return 	string
+		 */
+		private function evaluateShowTables(Statement $statement)
+		{
+			$TABLES = $this->evaluateTables($statement);
+			return
+				'SHOW FULL TABLES'
+					. (($TABLES) ? ' LIKE "' . $TABLES . '"' : '')
+					. ';'
+				;
+		}
+		
+		/**
+		 * Evaluates a show index from table statement.
+		 * 
+		 * @param	Statement	$statement	The Statement the evaluation should be based on.
+		 * @return 	string
+		 */
+		private function evaluateShowTableColumns(Statement $statement)
+		{
+			$TABLES = $this->evaluateTables($statement);
+			$WHERE = $this->evaluateWhere($statement);
+
+			return 			
+				'SHOW FULL COLUMNS FROM '
+				. $TABLES
+				. $WHERE;
+			;			
+		}
+		
+		/**
+		 * Evaluates a show index from table statement.
+		 * 
+		 * @param	Statement	$statement	The Statement the evaluation should be based on.
+		 * @return 	string
+		 */
+		private function evaluateShowTableIndexes(Statement $statement)
+		{
+			$TABLES = $this->evaluateTables($statement);
+			$WHERE = $this->evaluateWhere($statement);
+
+			return 			
+				'SHOW INDEX FROM '
+				. $TABLES
+				. $WHERE;
+			;			
+		}
+		
+		/**
 		 * Evaluates an insert Statement.
 		 * 
-		 * @param	Statement	$statement	The Statement the evaluation should be
-		 * 									based on.
-		 * 
+		 * @param	Statement	$statement	The Statement the evaluation should be based on.
 		 * @return 	string
 		 */
 		private function evaluateInsert(Statement $statement)
@@ -342,12 +392,25 @@
 			{
 				case Statement::$TYPE_SELECT:					
 					return $this->evaluateSelect($statement);
+					
 				case Statement::$TYPE_INSERT:					
 					return $this->evaluateInsert($statement);
+					
 				case Statement::$TYPE_UPDATE:					
 					return $this->evaluateUpdate($statement);
+					
 				case Statement::$TYPE_DELETE:					
-					return $this->evaluateDelete($statement);														
+					return $this->evaluateDelete($statement);
+																			
+				case Statement::$TYPE_SHOW_TABLES:
+					return $this->evaluateShowTables($statement);
+					
+				case Statement::$TYPE_SHOW_TABLE_COLUMNS:
+					return $this->evaluateShowTableColumns($statement);
+
+				case Statement::$TYPE_SHOW_TABLE_INDEXES:
+					return $this->evaluateShowTableIndexes($statement);
+					
 				default:
 					throw new \Exception('Unrecognized statement type');
 			}						

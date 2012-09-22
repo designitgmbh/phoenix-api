@@ -11,11 +11,11 @@
 		
 		/* Container-Methods */
 				
-		protected function _addElement($newElement) {
+		protected function addElement($newElement) {
 			$this->content[] = $newElement; 
 		}
 
-		protected function _getAllElements() {
+		protected function getAllElements() {
 			return $this->content; 
 		}
 		
