@@ -22,12 +22,19 @@
 		 * 
 		 */
 		public function callClosure($closureName, $className) {
+			$func = $this->getPathClosureByName($closureName);
+			return $func($className);
+		}
+		
+		/**
+		 * 
+		 */
+		public function getPathClosureByName($closureName) {
 			if (!isset($this->closures[$closureName])) {
 				throw new \Exception("Unknown closure closureName: ". $closureName, 1);
 			}
-			$func = $this->closures[$closureName];
-			return $func($className);
-		}		
+			return $this->closures[$closureName];
+		}
 		
 		/**
 		 * 
