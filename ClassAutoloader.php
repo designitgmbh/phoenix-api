@@ -65,11 +65,11 @@
 					$filename[$name] = $value($className);
 				}
 				
-				throw new Exceptions\ClassNotFoundException(
-					'Class ' . '<pre>' . $className . '</pre>' . ' could not be found.'
-					. PHP_EOL
-					. '<pre>' . print_r($filename, true) .'</pre>'
-				);
+				// throw new Exceptions\ClassNotFoundException(
+					// 'Class ' . '<pre>' . $className . '</pre>' . ' could not be found.'
+					// . PHP_EOL
+					// . '<pre>' . print_r($filename, true) .'</pre>'
+				// );
 			}	
 		}
 	}
