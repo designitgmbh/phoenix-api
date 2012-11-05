@@ -29,7 +29,8 @@
 			$this->joins = array(
 				Statement::$LEFT_JOIN => 'LEFT',
 				Statement::$RIGHT_JOIN => 'RIGHT',
-				Statement::$CROSS_JOIN => 'CROSS'
+				Statement::$CROSS_JOIN => 'CROSS',
+				Statement::$INNER_JOIN => 'INNER'
 			);		
 		}
 		
@@ -152,7 +153,12 @@
 						
 			foreach($statement->getJoins() as $join)
 			{
-				$where .= ' '.$this->getJoin($join[2]).' JOIN '.$join[0].' ON '.$join[1];
+				$where .= ' ' . $this->getJoin($join[2]) . ' JOIN ' . $join[0]
+							. (
+								((bool)$join[3])
+								? ' USING (' . $join[1] . ')'
+								: ' ON ' . $join[1]
+							);
 			}
 			return $where;
 		}
@@ -235,7 +241,7 @@
 		 */
 		private function evaluateGroupBy(Statement $statement)
 		{
-			return $statement->hasGroupBy() ? implode(',', $statement->getGroupBy()) : '';
+			return $statement->hasGroupBy() ? ' GROUP BY '. implode(',', $statement->getGroupBy()) : '';
 		}
 		
 		/**

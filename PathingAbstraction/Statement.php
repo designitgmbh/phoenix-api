@@ -132,6 +132,13 @@
 			$CROSS_JOIN = 2,
 			
 			/**
+			 * Constant for INNER JOINs.
+			 * 
+			 * @var integer
+			 */			
+			$INNER_JOIN = 3,
+			
+			/**
 			 * Constant for SELECT Statments.
 			 * 
 			 * @var integer
@@ -589,16 +596,25 @@
 		 * @return 	Statement
 		 * @throws	\Exception
 		 */
-		public function join($what, $on, $type = 1)
+		public function join($what, $on, $type = 1, $using=false)
 		{
 			if(is_int($type))
 			{
-				$this->joins[] = array($what, $on, $type);
+				$this->joins[] = array($what, $on, $type, $using);
 				return $this;
 			}
 			throw new \Exception('Statement.join(): Invalid parameter type given.');
 		}
 		
+		public function joinOn($what, $on, $type = 1) {
+			return $this->join($what, $on, $type);
+		}
+
+		
+		public function joinUsing($what, $on, $type = 1) {
+			return $this->join($what, $on, $type, true);
+		}
+				
 		/**
 		 * Specifies the where conditions by providing a root element for the condition
 		 * tree. The provided condition has to be a Condition or ConditionGroup otherwise
