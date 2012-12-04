@@ -19,7 +19,7 @@ class Request {
 	}
 
 	public function getInt($name) {
-		if(is_numeric($this->getValue($name))) {
+		if ($this->isInt($name)) {
 			return (int)$this->getValue($name);
 		}
 		throw new \InvalidArgumentException('Request.getInt: Der übergebene Wert ist nicht numerisch.');
@@ -34,6 +34,10 @@ class Request {
 			return $this->request[$name];
 		}
 		throw new \InvalidArgumentException('Request.getValue(): Es gibt keinen Eintrag mit dem Namen ' . $name . '.');
+	}
+	
+	public function isInt($name) {
+		return ($this->hasEntry($name) && is_numeric($this->getValue($name)));
 	}
 
 	public function hasEntry($name) {
