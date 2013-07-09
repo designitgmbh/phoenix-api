@@ -28,6 +28,11 @@
 		public function __construct()
 		{
 			$this->children = array();
+			
+			$children = func_get_args();
+			foreach($children as $child) {
+				$this->set($child);
+			}
 		}
 		
 		/**
