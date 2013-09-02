@@ -103,21 +103,24 @@
 			
 			$stmt = new Statement;
 			$stmt->deleteFrom($this->table);
-			
-			foreach($objKeys as $objKey)
+						
+			$grp = new AndConditionGroup;
+			foreach($objKeys as $objKeys)
 			{
-				$stmt->where($objKey, '=', ':'.$objKey);
+				$grp->set(new Condition($objKeys, '=', ':o'.$objKeys, false));					
 			}
-			
+			$stmt->where($grp);
+
 			if(!$statement = $this->connection->prepare($stmt))
 			{
 				throw new \Exception('Couldn\'t prepare statement in TableDataGateway.delete');
 			}
 			
-			if(!$statement->execute($this->generateBind($obj)))
+			if(!$statement->execute($this->generateBind($obj, 'o')))
 			{
-				throw new \Exception('Couldn\'t execute statement in TableDataGateway.delete with ' . implode(', ',$this->generateBind($obj)));
+				throw new \Exception('Couldn\'t execute statement in TableDataGateway.delete with ' . implode(', ', $this->generateBind($obj, 'o')));
 			}
+						
 			return TRUE;
 		}
 		
