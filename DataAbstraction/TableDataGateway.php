@@ -105,22 +105,26 @@
 			$stmt->deleteFrom($this->table);
 						
 			$grp = new AndConditionGroup;
-			foreach($objKeys as $objKeys)
-			{
-				$grp->set(new Condition($objKeys, '=', ':o'.$objKeys, false));					
-			}
-			$stmt->where($grp);
 
+			foreach($objKeys as $objKey)
+			{
+				$grp->set(new Condition($objKey, '=', ':'.$objKey, FALSE));
+			}
+			
+			if(count($objKeys) > 0) {
+				$stmt->where($grp);
+			}
+			
 			if(!$statement = $this->connection->prepare($stmt))
 			{
 				throw new \Exception('Couldn\'t prepare statement in TableDataGateway.delete');
 			}
-			
-			if(!$statement->execute($this->generateBind($obj, 'o')))
+	
+			$binds = $this->generateBind($obj);
+			if(!$statement->execute($binds))
 			{
-				throw new \Exception('Couldn\'t execute statement in TableDataGateway.delete with ' . implode(', ', $this->generateBind($obj, 'o')));
+				throw new \Exception('Couldn\'t execute statement in TableDataGateway.delete with ' . implode(', ',$this->generateBind($obj)));
 			}
-						
 			return TRUE;
 		}
 		
@@ -231,7 +235,7 @@
 		 * @return	mixed
 		 * @throws	\Exception
 		 */
-		protected function find(array $filters = array(), array $orderBy = array(), $set = FALSE)
+		protected function find(array $filters = array(), array $orderBy = array(), $set = FALSE, $offset = null, $length = null)
 		{
 			$stmt = new Statement;
 			$stmt
@@ -271,7 +275,12 @@
 					throw new \Exception('TableDataGateway find requires the provided ordering list to consist of TableDataGatewayOrderings');
 				}
 			}
-						
+			
+			if (!is_null($offset) && !is_null($length))
+			{
+				$stmt->limit($offset, $length);
+			}
+					
 			if(!$statement = $this->connection->prepare($stmt))
 			{
 				throw new \Exception('Couldn\'t prepare statement.');
