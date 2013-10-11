@@ -5,7 +5,7 @@ namespace api;
 use generated\gateway\bahn\api\runLockTableDataGateway as api;
 use generated\model\bahn\api\runLock as model;
 
-class RunLock {
+class Runlock {
 	
 	private
 		$gateway,
