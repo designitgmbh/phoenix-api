@@ -2,8 +2,8 @@
 
 namespace api;
 
-use generated\gateway\bahn\api\runLockTableDataGateway as api;
-use generated\model\bahn\api\runLock as model;
+use generated\gateway\bahn\api\RunlockTableDataGateway as api;
+use generated\model\bahn\api\Runlock as model;
 
 class Runlock {
 	
